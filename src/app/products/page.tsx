@@ -1,11 +1,29 @@
 import Link from "next/link";
-import { getProduct } from "../../../lib/api/products";
+import {
+  getProduct,
+  getProductsByCategory,
+  searchProducts,
+} from "../../../lib/api/products";
+import { ProductSearch } from "@/components/products/ProductSearch";
+import { ProductFilter } from "@/components/products/ProductFilter";
 
-export default async function ProductsPage() {
-  const data = await getProduct();
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ search?: string; category?: string }>;
+}) {
+  const { search, category } = await searchParams;
+
+  const data = search
+    ? await searchProducts(search)
+    : category
+      ? await getProductsByCategory(category)
+      : await getProduct();
 
   return (
     <main>
+      <ProductSearch />
+      <ProductFilter />
       <div>
         {data.products.map((product) => (
           <div key={product.id}>
