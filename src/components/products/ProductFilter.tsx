@@ -19,7 +19,7 @@ export function ProductFilter() {
         }
 
         router.push(
-          params.toString() ? `products?${params.toString()}` : `/products`,
+          params.toString() ? `/products?${params.toString()}` : `/products`,
         );
       }}
     >

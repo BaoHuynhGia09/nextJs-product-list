@@ -21,7 +21,9 @@ export function ProductSearch() {
           params.delete("search");
         }
 
-        router.push(query ? `/products?${params.toString()}` : `/products`);
+        router.push(
+          params.toString() ? `/products?${params.toString()}` : `/products`,
+        );
       }}
     >
       <input

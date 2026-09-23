@@ -46,3 +46,22 @@ export type ProductsResponse = {
   skip: number;
   limit: number;
 };
+
+export type ProductQuery = {
+  search?: string;
+  category?: string;
+  sortBy?: string;
+  order?: "asc" | "desc";
+  page?: number;
+  limit?: number;
+};
+
+export type PaginatedResponse<T> = {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+};
+
+export type ProductListResponse = PaginatedResponse<Product>;
