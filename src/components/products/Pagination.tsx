@@ -13,7 +13,7 @@ export function Pagination({
 }) {
   const router = useRouter();
   const search = useSearchParams();
-  const [limitInput, setLimitInput] = useState(limit);
+  const [limitInput, setLimitInput] = useState(String(limit));
 
   return (
     <div>
@@ -56,17 +56,16 @@ export function Pagination({
         type="number"
         min={1}
         max={100}
-        value={limit}
+        value={limitInput}
         onChange={(event) => {
-          setLimitInput(Number(event.target.value));
+          setLimitInput(event.target.value);
         }}
-        placeholder={`${limit}`}
       />
       <button
         onClick={() => {
-          const newLimit = limitInput;
+          const newLimit = Number(limitInput);
 
-          if (newLimit < 1 || newLimit > 100) {
+          if (!Number.isInteger(newLimit) || newLimit < 1 || newLimit > 100) {
             return;
           }
 

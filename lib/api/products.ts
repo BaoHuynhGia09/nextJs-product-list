@@ -28,7 +28,7 @@ export async function getProducts(
 
     products = response.products;
   } else {
-    const response = await apiClient<ProductsResponse>("/products");
+    const response = await apiClient<ProductsResponse>("/products?limit=0");
 
     products = response.products;
   }
