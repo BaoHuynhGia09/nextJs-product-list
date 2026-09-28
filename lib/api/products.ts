@@ -6,37 +6,30 @@ import type {
 } from "@/types/product";
 import { apiClient } from "./client";
 
-export async function getProducts(
+export async function getAllProducts(): Promise<Product[]> {
+  const res = await apiClient<ProductsResponse>("/products?limit=0", {
+    next: { revalidate: 3600 },
+  });
+  return res.products;
+}
+
+export async function queryProducts(
+  all: Product[],
   query: ProductQuery = {},
 ): Promise<ProductListResponse> {
-  let products: Product[];
+  let products = all;
 
   if (query.search) {
-    const params = new URLSearchParams({
-      q: query.search,
-    });
-
-    const response = await apiClient<ProductsResponse>(
-      `/products/search?${params.toString()}`,
+    const q = query.search.trim().toLowerCase();
+    products = products.filter(
+      (p) =>
+        p.title.toLowerCase().includes(q) ||
+        p.description?.toLowerCase().includes(q),
     );
-
-    products = response.products;
-  } else if (query.category) {
-    const response = await apiClient<ProductsResponse>(
-      `/products/category/${encodeURIComponent(query.category)}`,
-    );
-
-    products = response.products;
-  } else {
-    const response = await apiClient<ProductsResponse>("/products?limit=0");
-
-    products = response.products;
   }
 
-  if (query.search && query.category) {
-    products = products.filter(
-      (product) => product.category === query.category,
-    );
+  if (query.category) {
+    products = products.filter((p) => p.category === query.category);
   }
 
   if (query.sortBy) {
@@ -50,9 +43,9 @@ export async function getProducts(
       if (sortBy === "rating") {
         return (a.rating - b.rating) * order;
       }
-      if (sortBy === "title") {
-        return a.title.localeCompare(b.title) * order;
-      }
+      // if (sortBy === "title") {
+      //   return a.title.localeCompare(b.title) * order;
+      // }
       return 0;
     });
   }
@@ -60,14 +53,21 @@ export async function getProducts(
   // Valid page and limit
   const limit = Math.min(100, Math.max(1, query.limit ?? 10));
   const total = products.length;
-  const totalPages = Math.ceil(total / limit);
+  const totalPages = Math.max(1, Math.ceil(total / limit));
   const page = Math.min(totalPages, Math.max(1, query.page ?? 1));
   const skip = (page - 1) * limit;
-  const paginatedProducts = products.slice(skip, skip + limit);
 
-  return { data: paginatedProducts, total, page, limit, totalPages };
+  return {
+    data: products.slice(skip, skip + limit),
+    total,
+    page,
+    limit,
+    totalPages,
+  };
 }
 
 export function getProductById(id: number): Promise<Product> {
-  return apiClient<Product>(`/products/${id}`);
+  return apiClient<Product>(`/products/${id}`, {
+    next: { revalidate: 3600 },
+  });
 }

@@ -1,9 +1,15 @@
 import Link from "next/link";
-import { getProducts } from "../../../lib/api/products";
+import { getAllProducts, queryProducts } from "../../../lib/api/products";
 import { ProductSearch } from "@/components/products/ProductSearch";
 import { ProductFilter } from "@/components/products/ProductFilter";
 import { ProductSort } from "@/components/products/ProductSort";
 import { Pagination } from "@/components/products/Pagination";
+
+function parsePositiveNumber(value?: string) {
+  if (!value) return undefined;
+  const number = Number(value);
+  return Number.isInteger(number) && number >= 1 ? number : undefined;
+}
 
 export default async function ProductsPage({
   searchParams,
@@ -13,34 +19,22 @@ export default async function ProductsPage({
     category?: string;
     sortBy?: string;
     order?: "asc" | "desc";
-    page?: number;
-    limit?: number;
+    page?: string;
+    limit?: string;
   }>;
 }) {
-  const query = await searchParams;
+  const params = await searchParams;
 
-  const data = await getProducts({
-    search: query.search,
-    category: query.category,
-    sortBy: query.sortBy,
-    order: query.order,
-    page: parsePositiveNumber(query.page?.toString()),
-    limit: parsePositiveNumber(query.limit?.toString()),
+  const allProducts = await getAllProducts();
+
+  const data = await queryProducts(allProducts, {
+    search: params.search,
+    category: params.category,
+    sortBy: params.sortBy,
+    order: params.order,
+    page: parsePositiveNumber(params.page),
+    limit: parsePositiveNumber(params.limit),
   });
-
-  function parsePositiveNumber(value?: string) {
-    if (!value) {
-      return undefined;
-    }
-
-    const number = Number(value);
-
-    if (!Number.isInteger(number) || number < 1) {
-      return undefined;
-    }
-
-    return number;
-  }
 
   return (
     <main>
