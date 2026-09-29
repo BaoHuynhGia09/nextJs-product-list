@@ -4,6 +4,8 @@ import { ProductSearch } from "@/components/products/ProductSearch";
 import { ProductFilter } from "@/components/products/ProductFilter";
 import { ProductSort } from "@/components/products/ProductSort";
 import { Pagination } from "@/components/products/Pagination";
+import { Navbar } from "@/components/layout/Navbar";
+import { ProductGrid } from "@/components/products/ProductGrid";
 
 function parsePositiveNumber(value?: string) {
   if (!value) return undefined;
@@ -38,18 +40,11 @@ export default async function ProductsPage({
 
   return (
     <main>
+      <Navbar />
       <ProductSearch />
       <ProductFilter />
       <ProductSort />
-      <div>
-        {data.data.map((product) => (
-          <div key={product.id}>
-            {product.id}
-            {product.title}
-            <Link href={`/products/${product.id}`}>Detail</Link>
-          </div>
-        ))}
-      </div>
+      <ProductGrid products={data.data} />
       <Pagination
         page={data.page}
         totalPage={data.totalPages}
