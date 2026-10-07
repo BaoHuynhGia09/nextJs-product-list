@@ -23,12 +23,12 @@ export function Navbar() {
               Products
             </Link>
 
-            <button
+            {/* <button
               type="button"
               className="text-sm font-medium text-slate-600 transition-colors hover:text-slate-900"
             >
               Search
-            </button>
+            </button> */}
 
             <Link
               href="/cart"
@@ -67,12 +67,12 @@ export function Navbar() {
                 Products
               </Link>
 
-              <button
+              {/* <button
                 type="button"
                 className="rounded-lg px-3 py-2 text-left text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900"
               >
                 Search
-              </button>
+              </button> */}
 
               <Link
                 href="/cart"

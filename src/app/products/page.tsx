@@ -1,12 +1,11 @@
-import Link from "next/link";
 import { getAllProducts, queryProducts } from "../../../lib/api/products";
 import { ProductSearch } from "@/components/products/ProductSearch";
 import { ProductFilter } from "@/components/products/ProductFilter";
 import { ProductSort } from "@/components/products/ProductSort";
 import { Pagination } from "@/components/products/Pagination";
-import { Navbar } from "@/components/layout/Navbar";
 import { ProductGrid } from "@/components/products/ProductGrid";
 import { Container } from "@/components/ui/Container";
+import { ProductEmptyState } from "@/components/products/ProductEmptyState";
 
 function parsePositiveNumber(value?: string) {
   if (!value) return undefined;
@@ -39,6 +38,8 @@ export default async function ProductsPage({
     limit: parsePositiveNumber(params.limit),
   });
 
+  const hasProducts = data.data.length > 0;
+
   return (
     <main className="py-8 bg-slate-50 min-h-[calc(100vh-65px)]">
       <Container>
@@ -63,17 +64,21 @@ export default async function ProductsPage({
           </div>
         </div>
 
-        {/* Product Grid */}
-        <ProductGrid products={data.data} />
-
-        {/* Pagination */}
-        <div className="mt-10">
-          <Pagination
-            page={data.page}
-            totalPage={data.totalPages}
-            limit={data.limit}
-          />
-        </div>
+        {/* Content Section */}
+        {hasProducts ? (
+          <>
+            <ProductGrid products={data.data} />
+            <div className="mt-10">
+              <Pagination
+                page={data.page}
+                totalPage={data.totalPages}
+                limit={data.limit}
+              />
+            </div>
+          </>
+        ) : (
+          <ProductEmptyState />
+        )}
       </Container>
     </main>
   );
