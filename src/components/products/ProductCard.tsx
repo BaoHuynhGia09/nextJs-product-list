@@ -2,12 +2,15 @@ import { Product } from "@/types/product";
 import { Button } from "../ui/Button";
 import Image from "next/image";
 import Link from "next/link";
+import { useCart } from "@/context/CartContext";
 
 type ProductCardProps = {
   product: Product;
 };
 
 export function ProductCard({ product }: ProductCardProps) {
+  const { addToCart } = useCart();
+
   return (
     <article className="group overflow-hidden rounded-xl border border-slate-200 bg-white transition-shadow hover:shadow-md">
       <Link href={`/products/${product.id}`}>
@@ -31,7 +34,7 @@ export function ProductCard({ product }: ProductCardProps) {
           </h3>
 
           <div className="mt-2 flex items-center gap-1">
-            <span className="text-sm" aria-hidden="true">
+            <span className="text-sm text-amber-500" aria-hidden="true">
               ★
             </span>
 
@@ -43,10 +46,11 @@ export function ProductCard({ product }: ProductCardProps) {
           </p>
 
           <Button
-            className="mt-4 w-full"
+            variant="primary"
+            className="w-full mt-2"
             onClick={(e) => {
-              e.preventDefault(); // Tránh kích hoạt Link
-              // Handle add to cart sau này
+              e.preventDefault();
+              addToCart(product, 1);
             }}
           >
             Add to cart

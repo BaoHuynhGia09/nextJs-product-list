@@ -65,3 +65,8 @@ export type PaginatedResponse<T> = {
 };
 
 export type ProductListResponse = PaginatedResponse<Product>;
+
+export type CartItem = {
+  product: Product;
+  quantity: number;
+};

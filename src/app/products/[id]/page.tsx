@@ -3,7 +3,7 @@ import { getProductById } from "../../../../lib/api/products";
 import { Container } from "@/components/ui/Container";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/Button";
+import { AddToCartButton } from "@/components/products/AddToCartButton";
 
 export default async function ProductDetailPage({
   params,
@@ -102,20 +102,7 @@ export default async function ProductDetailPage({
 
             {/* Actions*/}
             <div className="mt-8 border-t border-slate-100 pt-6">
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <Button
-                  variant="primary"
-                  className="w-full sm:flex-1 h-11 text-base font-medium"
-                >
-                  Add to Cart
-                </Button>
-                <Button
-                  variant="secondary"
-                  className="w-full sm:w-auto h-11 px-6"
-                >
-                  Buy Now
-                </Button>
-              </div>
+              <AddToCartButton product={product} />
             </div>
           </div>
         </div>
